@@ -1,0 +1,1104 @@
+
+raw
+Fitlife · HTML
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitLife Premium</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary:#ffffff; --bg-secondary:#f5f5f3; --bg-tertiary:#f0f0ee;
+      --text-primary:#111; --text-secondary:#666;
+      --border:rgba(0,0,0,0.12); --border-hover:rgba(0,0,0,0.25);
+      --radius-md:8px; --radius-lg:12px;
+      --accent:#a8ff6b; --accent-text:#0a0a0f;
+      --purple:#534AB7; --sidebar-bg:#0a0a0f; --ph:#aaa;
+    }
+    [data-theme="dark"] {
+      --bg-primary:#1a1a1f; --bg-secondary:#222228; --bg-tertiary:#141418;
+      --text-primary:#f0f0ed; --text-secondary:#888;
+      --border:rgba(255,255,255,0.09); --border-hover:rgba(255,255,255,0.2);
+      --sidebar-bg:#0a0a0f; --ph:#555;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg-tertiary);display:flex;height:100vh;overflow:hidden;}
+ 
+    /* ─── ONBOARDING OVERLAY ─── */
+    #onboarding{
+      position:fixed;inset:0;z-index:999;
+      background:var(--bg-tertiary);
+      display:flex;align-items:center;justify-content:center;
+    }
+    .ob-card{
+      background:var(--bg-primary);border:0.5px solid var(--border);
+      border-radius:20px;padding:40px 44px;width:520px;max-width:95vw;
+    }
+    .ob-logo{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--accent-text);margin-bottom:6px;}
+    .ob-logo span{color:#534AB7;}
+    .ob-sub{font-size:14px;color:var(--text-secondary);margin-bottom:28px;}
+    .ob-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+    .ob-field{display:flex;flex-direction:column;gap:6px;}
+    .ob-field.full{grid-column:1/-1;}
+    .ob-field label{font-size:12px;color:var(--text-secondary);font-weight:500;letter-spacing:.3px;}
+    .ob-field input,.ob-field select{
+      padding:11px 14px;border:0.5px solid var(--border-hover);
+      border-radius:10px;background:var(--bg-secondary);
+      color:var(--text-primary);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;
+    }
+    .ob-field input:focus,.ob-field select:focus{border-color:#534AB7;box-shadow:0 0 0 3px rgba(83,74,183,0.12);}
+    .ob-field input.ob-err{border-color:#e24b4a;}
+    .ob-err-msg{font-size:11px;color:#a32d2d;margin-top:3px;display:none;}
+    .ob-err-msg.show{display:block;}
+    .ob-goal-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+    .ob-goal{
+      border:0.5px solid var(--border-hover);border-radius:10px;padding:12px 10px;
+      text-align:center;cursor:pointer;transition:all .2s;
+    }
+    .ob-goal:hover{border-color:#534AB7;}
+    .ob-goal.sel{border-color:#534AB7;background:rgba(83,74,183,0.08);box-shadow:0 0 0 1px #534AB7;}
+    .ob-goal .g-icon{font-size:24px;margin-bottom:6px;}
+    .ob-goal .g-lbl{font-size:12px;font-weight:500;color:var(--text-primary);}
+    .ob-btn{
+      width:100%;padding:13px;background:#0a0a0f;color:var(--accent);
+      border:none;border-radius:12px;font-size:15px;font-weight:500;
+      font-family:'DM Sans',sans-serif;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s;
+    }
+    .ob-btn:hover{opacity:.85;}
+ 
+    /* ─── SIDEBAR ─── */
+    .sidebar{
+      width:210px;background:var(--sidebar-bg);flex-shrink:0;
+      padding:24px 14px;display:flex;flex-direction:column;gap:4px;
+      height:100vh;position:fixed;left:0;top:0;
+    }
+    .logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:#fff;padding:8px 12px 16px;letter-spacing:-.5px;}
+    .logo span{color:var(--accent);}
+    .profile-pill{
+      display:flex;align-items:center;gap:9px;padding:9px 12px;
+      background:rgba(255,255,255,0.06);border-radius:10px;margin-bottom:10px;cursor:pointer;
+    }
+    .profile-pill:hover{background:rgba(255,255,255,0.1);}
+    .avatar{
+      width:30px;height:30px;border-radius:50%;background:var(--accent);
+      color:var(--accent-text);font-size:12px;font-weight:700;
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .profile-info{overflow:hidden;}
+    .profile-name{font-size:13px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .profile-stats{font-size:11px;color:#666;}
+    .nav-item{
+      display:flex;align-items:center;gap:10px;padding:10px 12px;
+      border-radius:var(--radius-md);cursor:pointer;font-size:14px;color:#888;
+      transition:all .2s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif;
+    }
+    .nav-item i{font-size:17px;}
+    .nav-item:hover{color:#fff;background:rgba(255,255,255,0.07);}
+    .nav-item.active{color:var(--accent);background:rgba(168,255,107,0.1);}
+    .theme-toggle{
+      margin-top:auto;display:flex;align-items:center;justify-content:space-between;
+      padding:10px 12px;border-radius:var(--radius-md);background:rgba(255,255,255,0.05);
+      border:0.5px solid rgba(255,255,255,0.1);cursor:pointer;width:100%;
+      font-family:'DM Sans',sans-serif;font-size:13px;color:#888;
+    }
+    .theme-toggle:hover{background:rgba(255,255,255,0.09);color:#ccc;}
+    .toggle-pill{width:36px;height:20px;background:rgba(255,255,255,0.12);border-radius:10px;position:relative;transition:background .25s;flex-shrink:0;}
+    .toggle-pill::after{content:'';position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#888;transition:transform .25s,background .25s;}
+    [data-theme="dark"] .toggle-pill{background:rgba(168,255,107,0.25);}
+    [data-theme="dark"] .toggle-pill::after{transform:translateX(16px);background:var(--accent);}
+ 
+    /* ─── MAIN ─── */
+    .main{margin-left:210px;flex:1;overflow-y:auto;background:var(--bg-tertiary);height:100vh;}
+    .section{display:none;padding:32px 36px;}
+    .section.active{display:block;}
+    .page-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--text-primary);margin-bottom:4px;}
+    .page-sub{font-size:14px;color:var(--text-secondary);margin-bottom:22px;}
+ 
+    /* insight pill */
+    .insight{
+      display:inline-flex;align-items:center;gap:6px;
+      background:rgba(83,74,183,0.1);color:#534AB7;
+      border:0.5px solid rgba(83,74,183,0.25);
+      border-radius:20px;padding:5px 12px;font-size:12px;font-weight:500;margin-bottom:18px;
+    }
+    [data-theme="dark"] .insight{background:rgba(83,74,183,0.18);color:#a09df0;}
+ 
+    /* ─── HOME ─── */
+    .home-banner{
+      background:var(--sidebar-bg);border-radius:var(--radius-lg);
+      padding:28px 32px;margin-bottom:22px;position:relative;overflow:hidden;
+    }
+    .home-banner::after{content:'💪';position:absolute;right:28px;top:50%;transform:translateY(-50%);font-size:72px;opacity:.13;pointer-events:none;}
+    .home-banner h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:6px;}
+    .home-banner p{font-size:14px;color:#888;margin-bottom:18px;}
+    .start-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:var(--accent);color:var(--accent-text);border:none;border-radius:var(--radius-md);font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .2s;}
+    .start-btn:hover{opacity:.85;}
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+    .stat-c{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;}
+    .stat-num{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--text-primary);}
+    .stat-lbl{font-size:12px;color:var(--text-secondary);margin-top:2px;}
+    .quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .q-action{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:border-color .2s;display:flex;flex-direction:column;align-items:flex-start;gap:6px;}
+    .q-action:hover{border-color:var(--accent);}
+    .q-action i{font-size:20px;color:var(--text-secondary);}
+    .q-action span{font-size:14px;font-weight:500;color:var(--text-primary);}
+    .q-action small{font-size:12px;color:var(--text-secondary);}
+ 
+    /* ─── WORKOUT ─── */
+    .workout-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
+    .w-card{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:all .2s;}
+    .w-card:hover,.w-card.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);}
+    .w-card-icon{width:42px;height:42px;border-radius:10px;background:#f0fde0;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+    [data-theme="dark"] .w-card-icon{background:#1c2e10;}
+    .w-card-icon i{font-size:20px;color:#3B6D11;}
+    .w-card h3{font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:4px;}
+    .w-card p{font-size:12px;color:var(--text-secondary);}
+    .w-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;margin-top:6px;font-weight:500;}
+    .w-badge.green{background:#f0fde0;color:#3B6D11;}
+    .w-badge.amber{background:#faeeda;color:#ba7517;}
+    .w-badge.red{background:#fcebeb;color:#a32d2d;}
+    [data-theme="dark"] .w-badge.green{background:#1c2e10;color:#a8ff6b;}
+    [data-theme="dark"] .w-badge.amber{background:#2e2010;color:#ef9f27;}
+    [data-theme="dark"] .w-badge.red{background:#2a1010;color:#f09595;}
+    .workout-panel{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:22px;}
+    .exercise-list{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;}
+    .ex-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-secondary);border-radius:var(--radius-md);}
+    .ex-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-text);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .ex-info{flex:1;}
+    .ex-name{font-size:14px;font-weight:500;color:var(--text-primary);}
+    .ex-meta{font-size:12px;color:var(--text-secondary);}
+    .ex-status{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-hover);cursor:pointer;flex-shrink:0;transition:all .2s;}
+    .ex-status.done{background:var(--accent);border-color:var(--accent);}
+    .timer-box{display:flex;align-items:center;justify-content:space-between;background:var(--sidebar-bg);border-radius:var(--radius-lg);padding:18px 24px;}
+    .timer-display{font-family:'Syne',sans-serif;font-size:40px;font-weight:700;color:var(--accent);letter-spacing:3px;}
+    .timer-label{font-size:12px;color:#666;margin-top:3px;}
+    .progress-bar{height:4px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:10px;width:200px;}
+    .progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 1s linear;}
+    .timer-btns{display:flex;gap:10px;}
+    .t-btn{padding:10px 18px;border-radius:var(--radius-md);border:none;cursor:pointer;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;display:flex;align-items:center;gap:6px;transition:opacity .2s;}
+    .t-btn.primary{background:var(--accent);color:var(--accent-text);}
+    .t-btn.secondary{background:rgba(255,255,255,0.1);color:#fff;}
+    .t-btn:hover{opacity:.8;}
+ 
+    /* ─── DIET ─── */
+    .diet-header{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+    .macro-card{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:16px;text-align:center;}
+    .macro-val{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:var(--text-primary);}
+    .macro-label{font-size:12px;color:var(--text-secondary);margin-top:2px;}
+    .macro-bar{height:4px;border-radius:2px;margin-top:10px;}
+    .meal-log{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:18px;margin-bottom:14px;}
+    .meal-log h3{font-size:15px;font-weight:500;color:var(--text-primary);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+    .food-item{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:0.5px solid var(--border);}
+    .food-item:last-child{border-bottom:none;}
+    .food-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+    .food-name{flex:1;font-size:14px;color:var(--text-primary);}
+    .food-cal{font-size:14px;font-weight:500;color:var(--text-secondary);}
+    .food-del{background:none;border:none;cursor:pointer;color:#ccc;font-size:16px;padding:0 4px;transition:color .2s;}
+    .food-del:hover{color:#e24b4a;}
+    .add-food-row{display:flex;gap:8px;margin-top:4px;}
+    .add-food-row input,.add-food-row select{flex:1;padding:9px 12px;border:0.5px solid var(--border-hover);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
+    .add-food-row input:focus,.add-food-row select:focus{border-color:var(--accent);}
+    .add-btn{padding:9px 16px;background:var(--accent);color:var(--accent-text);border:none;border-radius:var(--radius-md);cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;white-space:nowrap;display:flex;align-items:center;gap:5px;}
+    .add-btn:hover{opacity:.85;}
+    .diet-tip{background:rgba(83,74,183,0.07);border:0.5px solid rgba(83,74,183,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:#534AB7;margin-bottom:14px;}
+    [data-theme="dark"] .diet-tip{background:rgba(83,74,183,0.15);color:#a09df0;}
+ 
+    /* ─── YOGA ─── */
+    .yoga-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
+    .y-card{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:all .2s;text-align:center;}
+    .y-card:hover,.y-card.selected{border-color:var(--purple);box-shadow:0 0 0 1px var(--purple);}
+    .y-icon{font-size:30px;margin-bottom:8px;}
+    .y-card h3{font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:3px;}
+    .y-card p{font-size:12px;color:var(--text-secondary);}
+    .yoga-player{background:var(--bg-primary);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:24px;}
+    .pose-display{text-align:center;padding:16px 0;}
+    .pose-icon{font-size:56px;margin-bottom:12px;transition:all .4s;display:block;}
+    .pose-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--text-primary);}
+    .pose-instruction{font-size:14px;color:var(--text-secondary);margin-top:8px;max-width:320px;margin-left:auto;margin-right:auto;line-height:1.6;}
+    .breath-indicator{display:flex;align-items:center;justify-content:center;gap:18px;margin:16px 0 6px;}
+    .breath-dot{width:13px;height:13px;border-radius:50%;border:2px solid var(--purple);transition:all .3s;}
+    .breath-dot.active{background:var(--purple);transform:scale(1.35);}
+    #breath-label{text-align:center;font-size:13px;color:var(--text-secondary);margin-bottom:10px;}
+    .pose-steps{display:flex;gap:7px;justify-content:center;margin:10px 0 16px;}
+    .pose-step{width:30px;height:4px;border-radius:2px;background:var(--border);}
+    .pose-step.done{background:var(--purple);}
+    .pose-step.current{background:var(--accent);}
+    .yoga-controls{display:flex;align-items:center;justify-content:center;gap:12px;}
+    .y-btn{padding:10px 20px;border-radius:var(--radius-md);border:none;cursor:pointer;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:500;display:flex;align-items:center;gap:6px;transition:opacity .2s;}
+    .y-btn.primary{background:var(--purple);color:#fff;}
+    .y-btn.ghost{background:var(--bg-secondary);color:var(--text-primary);border:0.5px solid var(--border-hover);}
+    .y-btn:hover{opacity:.85;}
+ 
+    /* ─── CONTACT ─── */
+    .contact-wrap{max-width:500px;}
+    .form-group{margin-bottom:16px;}
+    .form-group label{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:6px;}
+    .form-group input,.form-group textarea,.form-group select{width:100%;padding:11px 14px;border:0.5px solid var(--border-hover);border-radius:var(--radius-md);background:var(--bg-primary);color:var(--text-primary);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;}
+    .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(83,74,183,0.1);}
+    .form-group input.error,.form-group textarea.error,.form-group select.error{border-color:#E24B4A;}
+    .form-group textarea{resize:vertical;min-height:100px;line-height:1.6;}
+    .field-err{font-size:12px;color:#A32D2D;margin-top:5px;display:none;}
+    .field-err.show{display:block;}
+    .submit-btn{width:100%;padding:13px;background:var(--sidebar-bg);color:var(--accent);border:none;border-radius:var(--radius-lg);font-size:15px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background .2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .submit-btn:hover{background:#1a1a2e;}
+    .success-msg{display:none;background:#f0fde0;border:0.5px solid #C0DD97;border-radius:var(--radius-lg);padding:24px;text-align:center;margin-top:18px;}
+    .success-msg.show{display:block;}
+    .success-msg i{font-size:34px;color:#3B6D11;margin-bottom:10px;display:block;}
+    .success-msg h3{font-size:17px;font-weight:500;color:#3B6D11;margin-bottom:4px;}
+    .success-msg p{font-size:13px;color:#639922;}
+    [data-theme="dark"] .success-msg{background:#1a2e10;border-color:#3B6D11;}
+    [data-theme="dark"] .success-msg h3{color:#a8ff6b;}
+    [data-theme="dark"] .success-msg p{color:#639922;}
+ 
+    /* scrollbar */
+    .main::-webkit-scrollbar{width:5px;}
+    .main::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+ 
+    /* profile edit modal */
+    #profile-modal{display:none;position:fixed;inset:0;z-index:998;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;}
+    #profile-modal.open{display:flex;}
+    .modal-card{background:var(--bg-primary);border-radius:16px;padding:32px 36px;width:440px;max-width:95vw;}
+    .modal-card h2{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:16px;}
+    .modal-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    .modal-field{display:flex;flex-direction:column;gap:5px;}
+    .modal-field label{font-size:12px;color:var(--text-secondary);}
+    .modal-field input,.modal-field select{padding:9px 12px;border:0.5px solid var(--border-hover);border-radius:8px;background:var(--bg-secondary);color:var(--text-primary);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
+    .modal-field input:focus,.modal-field select:focus{border-color:#534AB7;}
+    .modal-btns{display:flex;gap:10px;margin-top:18px;}
+    .modal-save{flex:1;padding:11px;background:#0a0a0f;color:var(--accent);border:none;border-radius:10px;font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;}
+    .modal-cancel{flex:1;padding:11px;background:var(--bg-secondary);color:var(--text-primary);border:0.5px solid var(--border-hover);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;}
+  </style>
+</head>
+<body>
+ 
+<!-- ══ ONBOARDING ══ -->
+<div id="onboarding">
+  <div class="ob-card">
+    <div class="ob-logo">Fit<span>Life</span> <span style="font-size:13px;font-weight:400;color:var(--text-secondary);font-family:'DM Sans',sans-serif">Premium</span></div>
+    <p class="ob-sub">Tell us about yourself so we can personalise everything for you.</p>
+ 
+    <div class="ob-row">
+      <div class="ob-field">
+        <label>FULL NAME</label>
+        <input type="text" id="ob-name" placeholder="e.g. Garv Sharma" />
+        <div class="ob-err-msg" id="e-name">Please enter your name.</div>
+      </div>
+      <div class="ob-field">
+        <label>AGE</label>
+        <input type="number" id="ob-age" placeholder="e.g. 22" min="10" max="90" />
+        <div class="ob-err-msg" id="e-age">Enter age between 10–90.</div>
+      </div>
+    </div>
+    <div class="ob-row">
+      <div class="ob-field">
+        <label>HEIGHT (cm)</label>
+        <input type="number" id="ob-height" placeholder="e.g. 175" min="100" max="250" />
+        <div class="ob-err-msg" id="e-height">Enter height in cm (100–250).</div>
+      </div>
+      <div class="ob-field">
+        <label>WEIGHT (kg)</label>
+        <input type="number" id="ob-weight" placeholder="e.g. 70" min="20" max="300" />
+        <div class="ob-err-msg" id="e-weight">Enter weight in kg (20–300).</div>
+      </div>
+    </div>
+    <div class="ob-row">
+      <div class="ob-field">
+        <label>GENDER</label>
+        <select id="ob-gender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other / Prefer not to say</option>
+        </select>
+      </div>
+      <div class="ob-field">
+        <label>ACTIVITY LEVEL</label>
+        <select id="ob-activity">
+          <option value="1.2">Sedentary (desk job)</option>
+          <option value="1.375">Lightly active (1–3x/week)</option>
+          <option value="1.55" selected>Moderately active (3–5x)</option>
+          <option value="1.725">Very active (6–7x/week)</option>
+          <option value="1.9">Athlete (2x/day)</option>
+        </select>
+      </div>
+    </div>
+ 
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:10px;font-weight:500;letter-spacing:.3px;">YOUR GOAL</p>
+    <div class="ob-goal-row">
+      <div class="ob-goal sel" data-goal="lose" onclick="selGoal(this)">
+        <div class="g-icon">🔥</div><div class="g-lbl">Lose Weight</div>
+      </div>
+      <div class="ob-goal" data-goal="maintain" onclick="selGoal(this)">
+        <div class="g-icon">⚖️</div><div class="g-lbl">Stay Fit</div>
+      </div>
+      <div class="ob-goal" data-goal="gain" onclick="selGoal(this)">
+        <div class="g-icon">💪</div><div class="g-lbl">Build Muscle</div>
+      </div>
+    </div>
+ 
+    <button class="ob-btn" onclick="submitOnboarding()"><i class="ti ti-arrow-right"></i> Get my personalised plan</button>
+  </div>
+</div>
+ 
+<!-- ══ PROFILE EDIT MODAL ══ -->
+<div id="profile-modal">
+  <div class="modal-card">
+    <h2>Edit Profile</h2>
+    <div class="modal-row">
+      <div class="modal-field"><label>Name</label><input type="text" id="m-name" /></div>
+      <div class="modal-field"><label>Age</label><input type="number" id="m-age" min="10" max="90" /></div>
+    </div>
+    <div class="modal-row">
+      <div class="modal-field"><label>Height (cm)</label><input type="number" id="m-height" /></div>
+      <div class="modal-field"><label>Weight (kg)</label><input type="number" id="m-weight" /></div>
+    </div>
+    <div class="modal-row">
+      <div class="modal-field"><label>Gender</label>
+        <select id="m-gender"><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select>
+      </div>
+      <div class="modal-field"><label>Activity</label>
+        <select id="m-activity">
+          <option value="1.2">Sedentary</option>
+          <option value="1.375">Lightly active</option>
+          <option value="1.55">Moderately active</option>
+          <option value="1.725">Very active</option>
+          <option value="1.9">Athlete</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-save" onclick="saveProfile()">Save changes</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar">
+  <div class="logo">Fit<span>Life</span></div>
+  <div class="profile-pill" onclick="openModal()" title="Edit profile">
+    <div class="avatar" id="sb-avatar">G</div>
+    <div class="profile-info">
+      <div class="profile-name" id="sb-name">Loading…</div>
+      <div class="profile-stats" id="sb-stats">— kg · — cm</div>
+    </div>
+  </div>
+  <button class="nav-item active" onclick="showSection('home')"    id="nav-home"><i class="ti ti-home"></i> Home</button>
+  <button class="nav-item"        onclick="showSection('workout')" id="nav-workout"><i class="ti ti-barbell"></i> Workout</button>
+  <button class="nav-item"        onclick="showSection('diet')"    id="nav-diet"><i class="ti ti-salad"></i> Diet & Nutrition</button>
+  <button class="nav-item"        onclick="showSection('yoga')"    id="nav-yoga"><i class="ti ti-heart"></i> Yoga</button>
+  <button class="nav-item"        onclick="showSection('contact')" id="nav-contact"><i class="ti ti-mail"></i> Contact</button>
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+    <span id="theme-label"><i class="ti ti-moon" style="font-size:15px;margin-right:6px;vertical-align:-2px"></i>Dark mode</span>
+    <div class="toggle-pill"></div>
+  </button>
+</div>
+ 
+<!-- ══ MAIN ══ -->
+<div class="main">
+ 
+  <!-- HOME -->
+  <div id="home" class="section active">
+    <p class="page-title" id="home-greeting">Good morning 👋</p>
+    <p class="page-sub" id="home-tagline">Ready to crush your goals today?</p>
+    <div class="insight" id="home-insight"><i class="ti ti-info-circle"></i> Loading your stats…</div>
+    <div class="home-banner">
+      <h2 id="banner-title">Start Today's Workout</h2>
+      <p id="banner-sub">Loading plan…</p>
+      <button class="start-btn" onclick="showSection('workout')"><i class="ti ti-player-play"></i> Let's go</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-c"><div class="stat-num" id="stat-bmi">—</div><div class="stat-lbl">BMI</div></div>
+      <div class="stat-c"><div class="stat-num" id="stat-bmr">—</div><div class="stat-lbl">BMR (kcal/day)</div></div>
+      <div class="stat-c"><div class="stat-num" id="stat-tdee">—</div><div class="stat-lbl">TDEE (kcal/day)</div></div>
+      <div class="stat-c"><div class="stat-num" id="stat-goal-cal">—</div><div class="stat-lbl">Goal calories</div></div>
+    </div>
+    <p style="font-size:14px;font-weight:500;color:var(--text-primary);margin-bottom:12px;">Quick actions</p>
+    <div class="quick-actions">
+      <div class="q-action" onclick="showSection('workout')"><i class="ti ti-barbell"></i><span>Workout</span><small id="qa-workout">Loading…</small></div>
+      <div class="q-action" onclick="showSection('diet')"><i class="ti ti-salad"></i><span>Diet</span><small id="qa-diet">Loading…</small></div>
+      <div class="q-action" onclick="showSection('yoga')"><i class="ti ti-heart"></i><span>Yoga</span><small id="qa-yoga">Loading…</small></div>
+    </div>
+  </div>
+ 
+  <!-- WORKOUT -->
+  <div id="workout" class="section">
+    <p class="page-title">Workout Plans</p>
+    <p class="page-sub" id="workout-sub">Personalised for your profile</p>
+    <div class="insight" id="workout-insight"><i class="ti ti-info-circle"></i></div>
+    <div class="workout-grid" id="workout-grid"></div>
+    <div class="workout-panel">
+      <div class="exercise-list" id="exercise-list"></div>
+      <div class="timer-box">
+        <div>
+          <div class="timer-display" id="timer-display">00:00</div>
+          <div class="timer-label" id="timer-label">Session timer</div>
+          <div class="progress-bar"><div class="progress-fill" id="timer-progress" style="width:100%"></div></div>
+        </div>
+        <div class="timer-btns">
+          <button class="t-btn primary" id="timer-start-btn" onclick="toggleTimer()"><i class="ti ti-player-play"></i> Start</button>
+          <button class="t-btn secondary" onclick="resetTimer()"><i class="ti ti-refresh"></i> Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- DIET -->
+  <div id="diet" class="section">
+    <p class="page-title">Diet & Nutrition</p>
+    <p class="page-sub">Personalised macro targets for your body</p>
+    <div class="diet-tip" id="diet-tip"></div>
+    <div class="diet-header">
+      <div class="macro-card">
+        <div class="macro-val" id="cal-val">—</div><div class="macro-label">Calories logged</div>
+        <div class="macro-bar" style="background:#EAF3DE"><div id="cal-bar" style="height:100%;border-radius:2px;background:#639922;width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">Goal: <span id="diet-cal-goal">—</span> kcal</div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-val" id="prot-val">0g</div><div class="macro-label">Protein</div>
+        <div class="macro-bar" style="background:#E6F1FB"><div id="prot-bar" style="height:100%;border-radius:2px;background:#185FA5;width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">Goal: <span id="diet-prot-goal">—</span>g</div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-val" id="carb-val">0g</div><div class="macro-label">Carbs</div>
+        <div class="macro-bar" style="background:#FAEEDA"><div id="carb-bar" style="height:100%;border-radius:2px;background:#BA7517;width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">Goal: <span id="diet-carb-goal">—</span>g</div>
+      </div>
+      <div class="macro-card">
+        <div class="macro-val" id="fat-val">0g</div><div class="macro-label">Fat</div>
+        <div class="macro-bar" style="background:#FBEAF0"><div id="fat-bar" style="height:100%;border-radius:2px;background:#993556;width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:4px">Goal: <span id="diet-fat-goal">—</span>g</div>
+      </div>
+    </div>
+    <div class="meal-log">
+      <h3>Today's meals <span style="font-size:13px;color:var(--text-secondary);font-weight:400" id="meal-count">0 items</span></h3>
+      <div id="food-list"><div style="font-size:13px;color:var(--text-secondary);padding:8px 0">No meals logged yet. Add your first meal below.</div></div>
+    </div>
+    <div class="meal-log">
+      <h3 style="margin-bottom:12px">Log food</h3>
+      <div class="add-food-row">
+        <input type="text" id="food-name-input" placeholder="Food name (e.g. Rice bowl)" />
+        <input type="number" id="food-cal-input" placeholder="kcal" style="max-width:90px;flex:none" min="1" />
+        <select id="food-macro">
+          <option value="protein">Protein</option>
+          <option value="carb">Carbs</option>
+          <option value="fat">Fat</option>
+        </select>
+        <button class="add-btn" onclick="addFood()"><i class="ti ti-plus"></i> Add</button>
+      </div>
+      <div id="food-err" style="font-size:12px;color:#A32D2D;margin-top:6px;display:none">Please enter a food name and calories.</div>
+    </div>
+  </div>
+ 
+  <!-- YOGA -->
+  <div id="yoga" class="section">
+    <p class="page-title">Yoga & Meditation</p>
+    <p class="page-sub" id="yoga-sub">Choose a session to begin</p>
+    <div class="insight" id="yoga-insight"><i class="ti ti-info-circle"></i></div>
+    <div class="yoga-grid">
+      <div class="y-card selected" onclick="selectYoga(this,'morning')"><div class="y-icon">🌅</div><h3>Morning Flow</h3><p>Flexibility & energy</p></div>
+      <div class="y-card" onclick="selectYoga(this,'breathing')"><div class="y-icon">🌬️</div><h3>Breathwork</h3><p>Stress & focus</p></div>
+      <div class="y-card" onclick="selectYoga(this,'meditation')"><div class="y-icon">🧘</div><h3>Meditation</h3><p>Calm & clarity</p></div>
+    </div>
+    <div class="yoga-player">
+      <div class="pose-display">
+        <span class="pose-icon" id="pose-icon">🧘</span>
+        <div class="pose-name" id="pose-name">Mountain Pose</div>
+        <div class="pose-instruction" id="pose-instruction">Stand tall, feet hip-width. Arms at sides. Breathe deep and find your stillness.</div>
+      </div>
+      <div class="breath-indicator">
+        <div class="breath-dot active" id="bd1"></div><div class="breath-dot" id="bd2"></div>
+        <div class="breath-dot" id="bd3"></div><div class="breath-dot" id="bd4"></div>
+      </div>
+      <div id="breath-label">Inhale…</div>
+      <div class="pose-steps" id="pose-steps"></div>
+      <div class="yoga-controls">
+        <button class="y-btn ghost" onclick="prevPose()"><i class="ti ti-arrow-left"></i> Prev</button>
+        <button class="y-btn primary" id="yoga-play-btn" onclick="toggleYoga()"><i class="ti ti-player-play"></i> Start</button>
+        <button class="y-btn ghost" onclick="nextPose()">Next <i class="ti ti-arrow-right"></i></button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- CONTACT -->
+  <div id="contact" class="section">
+    <p class="page-title">Contact Us</p>
+    <p class="page-sub">We'd love to hear from you</p>
+    <div class="contact-wrap">
+      <div class="form-group"><label>Full name</label><input type="text" id="c-name" /><div class="field-err" id="err-name">Please enter your name.</div></div>
+      <div class="form-group"><label>Email address</label><input type="email" id="c-email" placeholder="you@example.com" /><div class="field-err" id="err-email">Please enter a valid email.</div></div>
+      <div class="form-group"><label>Topic</label>
+        <select id="c-topic"><option value="">Select a topic…</option><option>Workout Plans</option><option>Diet & Nutrition</option><option>Yoga Sessions</option><option>Technical Support</option><option>Other</option></select>
+        <div class="field-err" id="err-topic">Please select a topic.</div>
+      </div>
+      <div class="form-group"><label>Message</label><textarea id="c-message" placeholder="Tell us how we can help…"></textarea><div class="field-err" id="err-message">Please enter your message.</div></div>
+      <button class="submit-btn" onclick="submitContact()"><i class="ti ti-send"></i> Send message</button>
+      <div class="success-msg" id="contact-success"><i class="ti ti-circle-check"></i><h3>Message sent!</h3><p>We'll get back to you within 24 hours.</p></div>
+    </div>
+  </div>
+ 
+</div><!-- /.main -->
+ 
+<script>
+/* ════════════════════════════════════════════
+   USER PROFILE
+════════════════════════════════════════════ */
+let user = {};
+ 
+function calcStats(u) {
+  const h = u.height, w = u.weight, a = u.age, g = u.gender;
+  const bmi = w / ((h/100) ** 2);
+  // Mifflin-St Jeor BMR
+  let bmr = g === 'female'
+    ? 10*w + 6.25*h - 5*a - 161
+    : 10*w + 6.25*h - 5*a + 5;
+  const tdee = Math.round(bmr * u.activity);
+  bmr = Math.round(bmr);
+  const bmiVal = Math.round(bmi * 10) / 10;
+ 
+  let goalCal = tdee;
+  if (u.goal === 'lose') goalCal = Math.max(1200, tdee - 500);
+  if (u.goal === 'gain') goalCal = tdee + 300;
+  goalCal = Math.round(goalCal);
+ 
+  // Macro split: protein 30%, carbs 40%, fat 30% (lose: 35/35/30, gain: 30/45/25)
+  let pSplit = 0.30, cSplit = 0.40, fSplit = 0.30;
+  if (u.goal === 'lose')  { pSplit=0.35; cSplit=0.35; fSplit=0.30; }
+  if (u.goal === 'gain')  { pSplit=0.30; cSplit=0.45; fSplit=0.25; }
+  const protG = Math.round(goalCal * pSplit / 4);
+  const carbG = Math.round(goalCal * cSplit / 4);
+  const fatG  = Math.round(goalCal * fSplit / 9);
+ 
+  let bmiLabel = 'Healthy weight';
+  if (bmiVal < 18.5) bmiLabel = 'Underweight';
+  else if (bmiVal >= 25 && bmiVal < 30) bmiLabel = 'Overweight';
+  else if (bmiVal >= 30) bmiLabel = 'Obese';
+ 
+  return { bmi: bmiVal, bmiLabel, bmr, tdee, goalCal, protG, carbG, fatG };
+}
+ 
+function fitnessLevel(u) {
+  // Simple heuristic: BMI + age → beginner/intermediate/advanced suggestion
+  const s = calcStats(u);
+  if (s.bmi > 30 || u.age > 55) return 'beginner';
+  if (s.bmi < 18.5 || u.age < 18) return 'beginner';
+  if (u.activity >= 1.55) return 'intermediate';
+  return 'beginner';
+}
+ 
+/* ════════════════════════════════════════════
+   ONBOARDING
+════════════════════════════════════════════ */
+let selectedGoal = 'lose';
+function selGoal(el) {
+  document.querySelectorAll('.ob-goal').forEach(g => g.classList.remove('sel'));
+  el.classList.add('sel');
+  selectedGoal = el.dataset.goal;
+}
+ 
+function submitOnboarding() {
+  const name   = document.getElementById('ob-name').value.trim();
+  const age    = parseInt(document.getElementById('ob-age').value);
+  const height = parseInt(document.getElementById('ob-height').value);
+  const weight = parseInt(document.getElementById('ob-weight').value);
+  const gender = document.getElementById('ob-gender').value;
+  const activity = parseFloat(document.getElementById('ob-activity').value);
+ 
+  let ok = true;
+  function chk(id, errId, cond) {
+    const el = document.getElementById(id);
+    const er = document.getElementById(errId);
+    if (cond) { el.classList.add('ob-err'); er.classList.add('show'); ok = false; }
+    else { el.classList.remove('ob-err'); er.classList.remove('show'); }
+  }
+  chk('ob-name',   'e-name',   !name);
+  chk('ob-age',    'e-age',    !age    || age<10    || age>90);
+  chk('ob-height', 'e-height', !height || height<100 || height>250);
+  chk('ob-weight', 'e-weight', !weight || weight<20  || weight>300);
+  if (!ok) return;
+ 
+  user = { name, age, height, weight, gender, activity, goal: selectedGoal };
+  localStorage.setItem('fitlife-user', JSON.stringify(user));
+  document.getElementById('onboarding').style.display = 'none';
+  initApp();
+}
+ 
+/* ════════════════════════════════════════════
+   INIT APP
+════════════════════════════════════════════ */
+function initApp() {
+  const s = calcStats(user);
+  const fl = fitnessLevel(user);
+  const first = user.name.split(' ')[0];
+ 
+  // Theme restore
+  const savedTheme = localStorage.getItem('fitlife-theme') ||
+    (window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  if (savedTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme','dark');
+    document.getElementById('theme-label').innerHTML =
+      '<i class="ti ti-sun" style="font-size:15px;margin-right:6px;vertical-align:-2px"></i>Light mode';
+  }
+ 
+  // Sidebar
+  document.getElementById('sb-name').textContent = first;
+  document.getElementById('sb-avatar').textContent = first.charAt(0).toUpperCase();
+  document.getElementById('sb-stats').textContent = user.weight+'kg · '+user.height+'cm';
+ 
+  // Home
+  const hr = new Date().getHours();
+  const greet = hr<12 ? 'Good morning' : hr<17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('home-greeting').textContent = greet+', '+first+' 👋';
+  document.getElementById('home-tagline').textContent =
+    user.goal==='lose' ? 'Stay consistent — every rep counts 🔥' :
+    user.goal==='gain' ? 'Fuel up and lift heavy 💪' : 'Keep the balance going ⚖️';
+ 
+  // BMI insight
+  const bmiColor = s.bmiLabel==='Healthy weight' ? '#3B6D11' : s.bmiLabel==='Underweight'||s.bmiLabel==='Overweight' ? '#ba7517' : '#a32d2d';
+  document.getElementById('home-insight').innerHTML =
+    `<i class="ti ti-info-circle"></i> BMI ${s.bmi} — <strong style="color:${bmiColor}">${s.bmiLabel}</strong> &nbsp;·&nbsp; Daily goal: <strong>${s.goalCal} kcal</strong> &nbsp;·&nbsp; Protein target: <strong>${s.protG}g</strong>`;
+ 
+  // Stats
+  document.getElementById('stat-bmi').textContent   = s.bmi;
+  document.getElementById('stat-bmr').textContent   = s.bmr.toLocaleString();
+  document.getElementById('stat-tdee').textContent  = s.tdee.toLocaleString();
+  document.getElementById('stat-goal-cal').textContent = s.goalCal.toLocaleString();
+ 
+  // Banner
+  const plans = buildWorkoutPlans();
+  const rec = plans[0];
+  document.getElementById('banner-title').textContent = rec.name+' — Recommended for You';
+  document.getElementById('banner-sub').textContent   = rec.desc+' · '+Math.round(rec.time/60)+' mins';
+  document.getElementById('qa-workout').textContent   = fl==='beginner' ? 'Beginner plans ready' : 'Intermediate plans ready';
+  document.getElementById('qa-diet').textContent      = s.goalCal+' kcal goal today';
+  document.getElementById('qa-yoga').textContent      = user.age>40 ? 'Joint care recommended' : 'Morning flow recommended';
+ 
+  // Workout
+  buildWorkoutSection(plans, s, fl);
+ 
+  // Diet
+  initDiet(s);
+ 
+  // Yoga
+  initYoga();
+ 
+  // Contact pre-fill
+  document.getElementById('c-name').value = user.name;
+}
+ 
+/* ════════════════════════════════════════════
+   WORKOUT — PERSONALISED
+════════════════════════════════════════════ */
+function buildWorkoutPlans() {
+  const fl = fitnessLevel(user);
+  const s  = calcStats(user);
+  const isOlder = user.age > 45;
+  const isYoung = user.age < 18;
+ 
+  const all = {
+    walking: {
+      name:'Brisk Walking', icon:'ti-walk', badge:'Beginner', badgeClass:'green',
+      desc:'Low-impact cardio', time:1200,
+      exercises:[
+        {n:'Warm-up Walk',d:'5 min easy pace'},
+        {n:'Brisk Walk Intervals',d:'3 × 4 min fast, 1 min slow'},
+        {n:'Arm Swings',d:'3 sets × 20 reps'},
+        {n:'Calf Raises',d:'3 sets × 15 reps'},
+        {n:'Cool-down Walk',d:'5 min slow pace'},
+      ]
+    },
+    full: {
+      name:'Full Body', icon:'ti-run', badge:'Beginner', badgeClass:'green',
+      desc:'Balanced all-over workout', time:1200,
+      exercises:[
+        {n:'Jumping Jacks',d:'3 × 30 reps'},
+        {n:'Push-ups',d:'3 × 12 reps'},
+        {n:'Bodyweight Squats',d:'3 × 15 reps'},
+        {n:'Plank Hold',d:'3 × 30 sec'},
+        {n:'Lunges',d:'3 × 10 each leg'},
+        {n:'Mountain Climbers',d:'3 × 20 reps'},
+      ]
+    },
+    cardio: {
+      name:'Cardio Burn', icon:'ti-flame', badge:'Intermediate', badgeClass:'amber',
+      desc:'High-energy fat burn', time:900,
+      exercises:[
+        {n:'High Knees',d:'4 × 30 sec'},
+        {n:'Burpees',d:'3 × 10 reps'},
+        {n:'Jump Rope',d:'3 × 1 min'},
+        {n:'Box Jumps',d:'3 × 10 reps'},
+        {n:'Sprint in Place',d:'4 × 20 sec'},
+      ]
+    },
+    strength: {
+      name:'Strength Training', icon:'ti-barbell', badge:'Intermediate', badgeClass:'amber',
+      desc:'Muscle building compound lifts', time:1500,
+      exercises:[
+        {n:'Barbell Squats',d:'4 × 8 reps'},
+        {n:'Bench Press',d:'4 × 8 reps'},
+        {n:'Deadlift',d:'3 × 6 reps'},
+        {n:'Overhead Press',d:'3 × 10 reps'},
+        {n:'Bent-over Row',d:'3 × 10 reps'},
+        {n:'Dumbbell Curls',d:'3 × 12 reps'},
+      ]
+    },
+    hiit: {
+      name:'HIIT Circuit', icon:'ti-bolt', badge:'Advanced', badgeClass:'red',
+      desc:'Maximum calorie burn', time:900,
+      exercises:[
+        {n:'Explosive Squats',d:'4 × 15 reps'},
+        {n:'Plyometric Push-ups',d:'3 × 10 reps'},
+        {n:'Tuck Jumps',d:'3 × 12 reps'},
+        {n:'Sprint Intervals',d:'5 × 30 sec max effort'},
+        {n:'Burpee Pull-ups',d:'3 × 8 reps'},
+      ]
+    },
+    mobility: {
+      name:'Mobility & Stretch', icon:'ti-arrows-move', badge:'All Levels', badgeClass:'green',
+      desc:'Joint care & flexibility', time:900,
+      exercises:[
+        {n:'Hip Circles',d:'3 × 10 each direction'},
+        {n:'Knee-to-Chest Stretch',d:'Hold 30 sec each leg'},
+        {n:'Cat-Cow Stretch',d:'3 × 10 reps'},
+        {n:'Shoulder Rolls',d:'3 × 15 reps'},
+        {n:'Seated Hamstring Stretch',d:'Hold 30 sec each'},
+        {n:'Child\'s Pose',d:'Hold 45 sec'},
+      ]
+    },
+  };
+ 
+  let plans = [];
+  if (s.bmi >= 30 || isOlder) {
+    plans = ['walking','mobility','full'];
+  } else if (user.goal === 'lose') {
+    plans = fl==='beginner' ? ['full','cardio','mobility'] : ['cardio','hiit','full'];
+  } else if (user.goal === 'gain') {
+    plans = fl==='beginner' ? ['full','strength','cardio'] : ['strength','full','hiit'];
+  } else {
+    plans = fl==='beginner' ? ['full','mobility','cardio'] : ['full','cardio','strength'];
+  }
+  if (isYoung) plans = ['full','cardio','mobility'];
+ 
+  return plans.map(k => ({ key: k, ...all[k] }));
+}
+ 
+let curWorkout = null, workoutPlans = [];
+let timerInterval = null, timerRunning = false, timerLeft = 0, timerTotal = 0;
+ 
+function buildWorkoutSection(plans, s, fl) {
+  workoutPlans = plans;
+  const insight = fl==='beginner'
+    ? `Plans selected for your fitness level. Focus on form over speed.`
+    : `Intermediate plans chosen. Push for progressive overload each session.`;
+  document.getElementById('workout-insight').innerHTML = '<i class="ti ti-info-circle"></i> '+insight;
+  document.getElementById('workout-sub').textContent   = 'Tailored for '+user.name+' — '+fl+' level';
+ 
+  const grid = document.getElementById('workout-grid');
+  grid.innerHTML = plans.map((p,i) => `
+    <div class="w-card${i===0?' selected':''}" onclick="selectWorkout(this,'${p.key}')" id="wc-${p.key}">
+      <div class="w-card-icon"><i class="ti ${p.icon}"></i></div>
+      <h3>${p.name}</h3>
+      <p>${p.desc}</p>
+      <span class="w-badge ${p.badgeClass}">${p.badge}</span>
+    </div>`).join('');
+ 
+  selectWorkout(document.getElementById('wc-'+plans[0].key), plans[0].key);
+}
+ 
+function selectWorkout(el, key) {
+  document.querySelectorAll('.w-card').forEach(c => c.classList.remove('selected'));
+  if (el) el.classList.add('selected');
+  curWorkout = workoutPlans.find(p => p.key === key);
+  if (!curWorkout) return;
+  clearInterval(timerInterval); timerRunning = false;
+  timerLeft = timerTotal = curWorkout.time;
+  document.getElementById('timer-start-btn').innerHTML = '<i class="ti ti-player-play"></i> Start';
+  updateTimerDisplay();
+  renderExercises();
+}
+ 
+function renderExercises() {
+  if (!curWorkout) return;
+  document.getElementById('exercise-list').innerHTML = curWorkout.exercises.map((e,i) => `
+    <div class="ex-row">
+      <div class="ex-num">${i+1}</div>
+      <div class="ex-info"><div class="ex-name">${e.n}</div><div class="ex-meta">${e.d}</div></div>
+      <div class="ex-status" id="ex-s-${i}" onclick="this.classList.toggle('done')" role="checkbox" aria-label="Mark done"></div>
+    </div>`).join('');
+}
+ 
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval); timerRunning = false;
+    document.getElementById('timer-start-btn').innerHTML = '<i class="ti ti-player-play"></i> Resume';
+  } else {
+    if (timerLeft <= 0) { resetTimer(); return; }
+    timerRunning = true;
+    document.getElementById('timer-start-btn').innerHTML = '<i class="ti ti-player-pause"></i> Pause';
+    timerInterval = setInterval(() => {
+      timerLeft--;
+      updateTimerDisplay();
+      if (timerLeft <= 0) {
+        clearInterval(timerInterval); timerRunning = false;
+        document.getElementById('timer-start-btn').innerHTML = '<i class="ti ti-check"></i> Done!';
+      }
+    }, 1000);
+  }
+}
+function resetTimer() {
+  clearInterval(timerInterval); timerRunning = false;
+  timerLeft = timerTotal = curWorkout ? curWorkout.time : 0;
+  document.getElementById('timer-start-btn').innerHTML = '<i class="ti ti-player-play"></i> Start';
+  updateTimerDisplay();
+}
+function updateTimerDisplay() {
+  const m = Math.floor(timerLeft/60), s = timerLeft%60;
+  document.getElementById('timer-display').textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  document.getElementById('timer-progress').style.width = (timerLeft/Math.max(timerTotal,1)*100)+'%';
+}
+ 
+/* ════════════════════════════════════════════
+   DIET — PERSONALISED
+════════════════════════════════════════════ */
+const foodList = [];
+const macroColors = { protein:'#185FA5', carb:'#BA7517', fat:'#993556' };
+let dietGoals = { cal:2000, prot:150, carb:200, fat:65 };
+let loggedMacros = { prot:0, carb:0, fat:0 };
+ 
+function initDiet(s) {
+  dietGoals = { cal: s.goalCal, prot: s.protG, carb: s.carbG, fat: s.fatG };
+  document.getElementById('diet-cal-goal').textContent  = s.goalCal;
+  document.getElementById('diet-prot-goal').textContent = s.protG;
+  document.getElementById('diet-carb-goal').textContent = s.carbG;
+  document.getElementById('diet-fat-goal').textContent  = s.fatG;
+ 
+  const tipMap = {
+    lose: `🔥 To reach your deficit goal of ${s.goalCal} kcal, focus on high-protein, fibre-rich foods to stay full longer. Aim for ${s.protG}g protein daily.`,
+    gain: `💪 You need ${s.goalCal} kcal to build muscle. Eat in a ${s.goalCal - s.tdee} kcal surplus. Prioritise ${s.protG}g protein and quality carbs around workouts.`,
+    maintain: `⚖️ Your maintenance is ${s.tdee} kcal. Hit your ${s.protG}g protein target and keep fats and carbs balanced.`,
+  };
+  document.getElementById('diet-tip').textContent = tipMap[user.goal] || tipMap.maintain;
+  renderFoods();
+  updateMacros();
+}
+ 
+function renderFoods() {
+  const el = document.getElementById('food-list');
+  if (foodList.length === 0) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--text-secondary);padding:8px 0">No meals logged yet. Add your first meal below.</div>';
+  } else {
+    el.innerHTML = foodList.map((f,i) => `
+      <div class="food-item">
+        <div class="food-dot" style="background:${f.color}"></div>
+        <div class="food-name">${f.n}</div>
+        <div class="food-cal">${f.c} kcal</div>
+        <button class="food-del" onclick="removeFood(${i})" aria-label="Remove"><i class="ti ti-x"></i></button>
+      </div>`).join('');
+  }
+  document.getElementById('meal-count').textContent = foodList.length+' items';
+}
+ 
+function removeFood(i) { foodList.splice(i,1); renderFoods(); updateMacros(); }
+ 
+function updateMacros() {
+  const total = foodList.reduce((a,f) => a+f.c, 0);
+  const pct = v => Math.min(Math.round(v*100),100);
+  document.getElementById('cal-val').textContent  = total;
+  document.getElementById('cal-bar').style.width  = pct(total/dietGoals.cal)+'%';
+  const pG = foodList.filter(f=>f.t==='protein').reduce((a,f)=>a+Math.round(f.c/4),0);
+  const cG = foodList.filter(f=>f.t==='carb').reduce((a,f)=>a+Math.round(f.c/4),0);
+  const fG = foodList.filter(f=>f.t==='fat').reduce((a,f)=>a+Math.round(f.c/9),0);
+  document.getElementById('prot-val').textContent = pG+'g';
+  document.getElementById('carb-val').textContent = cG+'g';
+  document.getElementById('fat-val').textContent  = fG+'g';
+  document.getElementById('prot-bar').style.width = pct(pG/dietGoals.prot)+'%';
+  document.getElementById('carb-bar').style.width = pct(cG/dietGoals.carb)+'%';
+  document.getElementById('fat-bar').style.width  = pct(fG/dietGoals.fat)+'%';
+}
+ 
+function addFood() {
+  const n = document.getElementById('food-name-input').value.trim();
+  const c = parseInt(document.getElementById('food-cal-input').value);
+  const t = document.getElementById('food-macro').value;
+  const err = document.getElementById('food-err');
+  if (!n||!c||c<1) { err.style.display='block'; return; }
+  err.style.display='none';
+  foodList.push({n,c,t,color:macroColors[t]});
+  document.getElementById('food-name-input').value='';
+  document.getElementById('food-cal-input').value='';
+  renderFoods(); updateMacros();
+}
+ 
+/* ════════════════════════════════════════════
+   YOGA — PERSONALISED
+════════════════════════════════════════════ */
+const yogaSessions = {
+  morning:[
+    {icon:'🧘',name:'Mountain Pose',inst:'Stand tall, feet hip-width. Arms at sides. Breathe deep.'},
+    {icon:'🌿',name:'Forward Fold',inst:'Hinge at hips, fold forward gently. Let your head hang.'},
+    {icon:'🐈',name:'Cat-Cow Stretch',inst:'On all fours. Arch and round your spine with each breath.'},
+    {icon:'🐍',name:'Cobra Pose',inst:'Lie face down. Press up through your hands, open your chest.'},
+    {icon:'🌟',name:"Child's Pose",inst:'Sit back on heels, arms extended forward. Rest and breathe.'},
+  ],
+  breathing:[
+    {icon:'🌬️',name:'Box Breathing',inst:'Inhale 4 counts, hold 4, exhale 4, hold 4. Steady and even.'},
+    {icon:'🌊',name:'Ocean Breath',inst:'Breathe in through nose, out slowly through parted lips.'},
+    {icon:'☁️',name:'4-7-8 Breath',inst:'Inhale 4 sec, hold 7 sec, exhale for 8 sec. Very calming.'},
+    {icon:'✨',name:'Belly Breath',inst:'Place hand on belly. Breathe deeply into the abdomen.'},
+  ],
+  meditation:[
+    {icon:'🕯️',name:'Body Scan',inst:'Awareness from feet to head. Notice and release each sensation.'},
+    {icon:'🌸',name:'Loving-Kindness',inst:'Visualize sending warmth to yourself, then to others.'},
+    {icon:'🌙',name:'Mindful Breathing',inst:'Focus entirely on the sensation of each breath.'},
+    {icon:'🦋',name:'Visualization',inst:'Picture a calm, peaceful place. You are safe here.'},
+  ]
+};
+ 
+function initYoga() {
+  let rec = 'morning', tip = '';
+  if (user.age > 50 || calcStats(user).bmi > 28) {
+    rec = 'breathing';
+    tip = `For your age and body profile, gentle breathwork and meditation are highly beneficial. Start with ${rec} today.`;
+  } else if (user.goal === 'lose') {
+    tip = `Morning flow paired with cardio workouts maximises your fat-loss goal.`;
+  } else if (user.goal === 'gain') {
+    tip = `Use breathing sessions between strength days for recovery and focus.`;
+  } else {
+    tip = `Morning flow supports your balanced fitness routine.`;
+  }
+  document.getElementById('yoga-insight').innerHTML = '<i class="ti ti-info-circle"></i> '+tip;
+  document.getElementById('yoga-sub').textContent = 'Recommended for '+user.name+': '+(rec.charAt(0).toUpperCase()+rec.slice(1));
+ 
+  // highlight recommended
+  document.querySelectorAll('.y-card').forEach(c => c.classList.remove('selected'));
+  const recMap = {'morning':0,'breathing':1,'meditation':2};
+  document.querySelectorAll('.y-card')[recMap[rec]].classList.add('selected');
+  curYogaSession = rec;
+  renderYogaSession();
+}
+ 
+let curYogaSession = 'morning', curPoseIdx = 0;
+let yogaRunning = false, breathInterval = null, breathStep = 0;
+const breathLabels = ['Inhale…','Hold…','Exhale…','Hold…'];
+ 
+function renderYogaSession() {
+  const poses = yogaSessions[curYogaSession];
+  document.getElementById('pose-steps').innerHTML = poses.map((_,i) =>
+    `<div class="pose-step${i<curPoseIdx?' done':i===curPoseIdx?' current':''}"></div>`).join('');
+  const p = poses[curPoseIdx];
+  document.getElementById('pose-icon').textContent        = p.icon;
+  document.getElementById('pose-name').textContent        = p.name;
+  document.getElementById('pose-instruction').textContent = p.inst;
+}
+function selectYoga(el, key) {
+  document.querySelectorAll('.y-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  curYogaSession = key; curPoseIdx = 0;
+  stopBreath(); yogaRunning = false;
+  document.getElementById('yoga-play-btn').innerHTML = '<i class="ti ti-player-play"></i> Start';
+  renderYogaSession();
+}
+function nextPose() { if (curPoseIdx < yogaSessions[curYogaSession].length-1) { curPoseIdx++; renderYogaSession(); } }
+function prevPose() { if (curPoseIdx > 0) { curPoseIdx--; renderYogaSession(); } }
+function toggleYoga() {
+  if (yogaRunning) { stopBreath(); yogaRunning=false; document.getElementById('yoga-play-btn').innerHTML='<i class="ti ti-player-play"></i> Start'; }
+  else { yogaRunning=true; document.getElementById('yoga-play-btn').innerHTML='<i class="ti ti-player-pause"></i> Pause'; startBreath(); }
+}
+function startBreath() { breathStep=0; updateBreath(); breathInterval=setInterval(()=>{breathStep=(breathStep+1)%4;updateBreath();},2500); }
+function stopBreath() { clearInterval(breathInterval); [1,2,3,4].forEach(i=>document.getElementById('bd'+i).classList.remove('active')); }
+function updateBreath() {
+  [1,2,3,4].forEach(i=>document.getElementById('bd'+i).classList.remove('active'));
+  document.getElementById('bd'+(breathStep+1)).classList.add('active');
+  document.getElementById('breath-label').textContent = breathLabels[breathStep];
+}
+ 
+/* ════════════════════════════════════════════
+   PROFILE MODAL
+════════════════════════════════════════════ */
+function openModal() {
+  document.getElementById('m-name').value    = user.name;
+  document.getElementById('m-age').value     = user.age;
+  document.getElementById('m-height').value  = user.height;
+  document.getElementById('m-weight').value  = user.weight;
+  document.getElementById('m-gender').value  = user.gender;
+  document.getElementById('m-activity').value = user.activity;
+  document.getElementById('profile-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('profile-modal').classList.remove('open'); }
+function saveProfile() {
+  const name = document.getElementById('m-name').value.trim();
+  const age  = parseInt(document.getElementById('m-age').value);
+  const h    = parseInt(document.getElementById('m-height').value);
+  const w    = parseInt(document.getElementById('m-weight').value);
+  if (!name||!age||!h||!w) return;
+  user.name=name; user.age=age; user.height=h; user.weight=w;
+  user.gender   = document.getElementById('m-gender').value;
+  user.activity = parseFloat(document.getElementById('m-activity').value);
+  localStorage.setItem('fitlife-user', JSON.stringify(user));
+  closeModal();
+  initApp(); // re-init with new stats
+}
+ 
+/* ════════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════════ */
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+}
+ 
+/* ════════════════════════════════════════════
+   THEME
+════════════════════════════════════════════ */
+function toggleTheme() {
+  const dark = document.documentElement.getAttribute('data-theme')==='dark';
+  const next = dark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('fitlife-theme', next);
+  document.getElementById('theme-label').innerHTML = next==='dark'
+    ? '<i class="ti ti-sun" style="font-size:15px;margin-right:6px;vertical-align:-2px"></i>Light mode'
+    : '<i class="ti ti-moon" style="font-size:15px;margin-right:6px;vertical-align:-2px"></i>Dark mode';
+}
+ 
+/* ════════════════════════════════════════════
+   CONTACT
+════════════════════════════════════════════ */
+function submitContact() {
+  const name = document.getElementById('c-name').value.trim();
+  const email = document.getElementById('c-email').value.trim();
+  const topic = document.getElementById('c-topic').value;
+  const msg   = document.getElementById('c-message').value.trim();
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  function se(eId,fId,show){document.getElementById(eId).classList.toggle('show',show);document.getElementById(fId).classList.toggle('error',show);}
+  let ok=true;
+  if(!name){se('err-name','c-name',true);ok=false;}else se('err-name','c-name',false);
+  if(!emailOk){se('err-email','c-email',true);ok=false;}else se('err-email','c-email',false);
+  if(!topic){se('err-topic','c-topic',true);ok=false;}else se('err-topic','c-topic',false);
+  if(!msg){se('err-message','c-message',true);ok=false;}else se('err-message','c-message',false);
+  if(ok){
+    document.querySelector('.contact-wrap').querySelectorAll('input,textarea,select,button').forEach(e=>e.disabled=true);
+    document.getElementById('contact-success').classList.add('show');
+  }
+}
+ 
+/* ════════════════════════════════════════════
+   BOOT
+════════════════════════════════════════════ */
+(function(){
+  const saved = localStorage.getItem('fitlife-user');
+  if (saved) {
+    try {
+      user = JSON.parse(saved);
+      document.getElementById('onboarding').style.display = 'none';
+      initApp();
+    } catch(e) { /* show onboarding */ }
+  }
+})();
+</script>
+</body>
+</html>
